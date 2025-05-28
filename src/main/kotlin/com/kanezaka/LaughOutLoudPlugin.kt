@@ -1,10 +1,8 @@
 package com.kanezaka
 
 import com.google.inject.Provides
-import net.runelite.api.ChatMessageType
 import net.runelite.api.Client
-import net.runelite.api.GameState
-import net.runelite.api.events.GameStateChanged
+import net.runelite.api.events.ChatMessage
 import net.runelite.client.config.ConfigManager
 import net.runelite.client.eventbus.Subscribe
 import net.runelite.client.plugins.Plugin
@@ -18,9 +16,15 @@ import javax.inject.Inject
     tags = ["audio", "sound", "lol", "laugh"]
 )
 class LaughOutLoudPlugin : Plugin() {
-
     companion object {
         private val LOGGER = logger()
+        private val CHUCKLE_LIST = sortedSetOf(
+            "lmao",
+            "rofl",
+            "roflmao",
+        )
+        private val HA_REGEX = Regex("^([hH]|[aA])([hH]|[aA])+$")
+        private val LOL_REGEX = Regex("^[lL]([oO0]|[lL])+$")
     }
 
     @Inject
@@ -40,14 +44,21 @@ class LaughOutLoudPlugin : Plugin() {
     }
 
     @Subscribe
-    fun onGameStateChanged(gameStateChanged: GameStateChanged) {
-        if (gameStateChanged.gameState == GameState.LOGGED_IN) {
-            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null)
+    fun onChatMessage(chatMessage: ChatMessage) {
+        if (isCandidateMessage(chatMessage.message)) {
+            println("Message detected")
         }
     }
 
     @Provides
     fun provideConfig(configManager: ConfigManager): LaughOutLoudConfig {
         return configManager.getConfig(LaughOutLoudConfig::class.java)
+    }
+
+    private fun isCandidateMessage(messageText: String): Boolean {
+        val normalizedText = messageText.lowercase()
+        return CHUCKLE_LIST.contains(normalizedText) ||
+                HA_REGEX.matches(normalizedText) ||
+                LOL_REGEX.matches(normalizedText)
     }
 }
