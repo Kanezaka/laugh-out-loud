@@ -1,11 +1,11 @@
-package com.example
+package com.kanezaka
 
 import net.runelite.client.config.Config
 import net.runelite.client.config.ConfigGroup
 import net.runelite.client.config.ConfigItem
 
-@ConfigGroup("example")
-interface ExampleConfig : Config {
+@ConfigGroup("laughoutloud")
+interface LaughOutLoudConfig : Config {
     @ConfigItem(
         keyName = "greeting",
         name = "Welcome Greeting",

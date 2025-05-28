@@ -1,4 +1,4 @@
-package com.example
+package com.kanezaka
 
 import com.google.inject.Provides
 import net.runelite.api.ChatMessageType
@@ -12,8 +12,12 @@ import net.runelite.client.plugins.PluginDescriptor
 import org.apache.logging.log4j.kotlin.logger
 import javax.inject.Inject
 
-@PluginDescriptor(name = "Example")
-class ExamplePlugin : Plugin() {
+@PluginDescriptor(
+    name = "Laugh Out Loud",
+    description = "Enjoy others' joy. Plays audio when others laugh.",
+    tags = ["audio", "sound", "lol", "laugh"]
+)
+class LaughOutLoudPlugin : Plugin() {
 
     companion object {
         private val LOGGER = logger()
@@ -23,7 +27,7 @@ class ExamplePlugin : Plugin() {
     lateinit var client: Client
 
     @Inject
-    lateinit var config: ExampleConfig
+    lateinit var config: LaughOutLoudConfig
 
     @Throws(Exception::class)
     override fun startUp() {
@@ -43,7 +47,7 @@ class ExamplePlugin : Plugin() {
     }
 
     @Provides
-    fun provideConfig(configManager: ConfigManager): ExampleConfig {
-        return configManager.getConfig(ExampleConfig::class.java)
+    fun provideConfig(configManager: ConfigManager): LaughOutLoudConfig {
+        return configManager.getConfig(LaughOutLoudConfig::class.java)
     }
 }
